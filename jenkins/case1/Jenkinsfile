@@ -1,0 +1,5 @@
+node ('master') {
+    stage ('SRC Checkout'){
+        $class: 'GitSCM'
+        userRemoteConfigs = ssh://deepteshb@github.com/github/git.git
+}
