@@ -1,0 +1,23 @@
+pipeline {
+    agent any
+    tools {nodejs 'nodejs'}
+
+    stages {
+            stage('Checkout'){
+                steps{
+                    git credentialsId: 'deepteshgithub', url: 'https://github.com/deepteshb/tourofheroes.git'
+                    }
+            }
+            stage('Build'){
+                steps{
+                   sh 'npm install'
+                }
+            }
+            stage('Static Code Analysis'){
+                steps{
+                    sh 'npm run sonar'
+                }
+
+            }
+        }
+    }
