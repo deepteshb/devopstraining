@@ -2,7 +2,7 @@ node ('master'){
     tool name: 'nodejs', type: 'nodejs'
     stage('CHECKOUT'){
         sh 'echo "######################## CHECKOUT STAGE ###################################" '
-        git credentialsId: 'deepteshgithub', url: 'https://github.com/depteshb/tourofheroes.git#feature1'
+        git credentialsId: 'deepteshgithub', url: 'https://github.com/depteshb/tourofheroes.git'
         /*git 'https://github.com/deepteshb/tourofheroes.git' */
         /*git branch: 'feature1', credentialsId: 'deepteshgithub', url: 'https://github.com/deepteshb/tourofheroes.git'*/
     }
