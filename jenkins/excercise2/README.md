@@ -8,4 +8,6 @@
 3. Setup Build Promotion Based on Static Code Analysis
     - 
     - Quality Gate (Setup your build to be promoted when the quality gate is passed.)
+4. In order to setup the Angular Build you can use the following application on Github. Use the public repository or you can fork the same to your own repository manager.
+    GITHUB : https://github.com/deepteshb/tourofheroes.git
 
