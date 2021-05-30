@@ -1,24 +1,20 @@
-node ('master') {
+node ('master'){
     tool name: 'nodejs', type: 'nodejs'
-    tool name: 'sonar-scan', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
-    stage ('CHECKOUT') {
-        git credentialsId: 'deepteshgithub', url: 'https://github.com/deepteshb/tourofheroes.git'
+    stage('CHECKOUT'){
+        sh 'echo "######################## CHECKOUT STAGE ###################################" '
+        git credentialsId: 'deepteshgithub', url: 'https://github.com/depteshb/tourofheroes.git'
+        /*git 'https://github.com/deepteshb/tourofheroes.git' */
+        /*git branch: 'feature1', credentialsId: 'deepteshgithub', url: 'https://github.com/deepteshb/tourofheroes.git'*/
     }
-    stage('BUILD') {
+    stage('BUILD'){
+        sh 'echo "######################### BUILD STAGE ##################################" '
         sh 'npm build'
         sh 'npm install'
     }
 
-    stage('SCA') {
-        def scannerHome = tool 'sonar-scan'
-        withSonarQubeEnv('sca') {
-            sh "${scannerHome}/bin/sonar-scanner"
-        }
-    }
-
-    stage('QUALITY GATE CHECK') {
-        waitForQualityGate abortPipeline: true
-    }
-
-
+    stage('STATIC CODE ANALYSIS'){
+        sh 'echo "######################### STATIC CODE ANALYSIS ##################################" '
+        sh 'npm run sonar'
+            }
 }
+

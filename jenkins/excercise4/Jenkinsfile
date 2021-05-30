@@ -1,0 +1,34 @@
+node {
+    tool name: 'nodejs', type: 'nodejs'
+    tool name: 'sonar-scan', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
+    stage('\u2776 CheckOut'){
+        git credentialsId: 'deepteshgithub', url: 'https://bhattacharjeedeeptesh@dev.azure.com/bhattacharjeedeeptesh/tourOfHeroes/_git/tourOfHeroes'
+    }
+
+    stage('\u2778 BUILD') {
+        sh 'npm build'
+        sh 'npm install'
+    }
+
+    stage('\u2779 SCA') {
+        def scannerHome = tool 'sonar-scan'
+        withSonarQubeEnv('sca') {
+            sh "${scannerHome}/bin/sonar-scanner"
+        }
+    }
+
+    stage('\u277A QUALITY GATE CHECK') {
+        waitForQualityGate abortPipeline: true
+    }
+
+     stage('\u277B BUILD FOR PROD') {
+                
+                docker.image ('docker').inside{
+                git 'https://bhattacharjeedeeptesh@dev.azure.com/bhattacharjeedeeptesh/tourOfHeroes/_git/tourOfHeroes'
+                sh 'docker build - < Dockerfile'
+
+         }
+        
+    }
+
+}
