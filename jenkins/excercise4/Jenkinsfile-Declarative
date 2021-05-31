@@ -1,0 +1,16 @@
+pipeline {
+  agent {dockerfile true}
+  stages {
+    stage('Checkout') {
+                steps {
+                    git credentialsId: 'github', url: 'https://github.com/deepteshb/tourofheroes.git'
+                }
+            }
+    stage('Containerize'){
+        steps{
+          echo 'Container Ready'
+          }
+            
+        }
+    }
+  }

@@ -1,34 +1,30 @@
 node {
+    echo "Running ${env.BUILD_ID} on ${env.JENKINS_URL}"
+    
     tool name: 'nodejs', type: 'nodejs'
     tool name: 'sonar-scan', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
-    stage('\u2776 CheckOut'){
-        git credentialsId: 'deepteshgithub', url: 'https://bhattacharjeedeeptesh@dev.azure.com/bhattacharjeedeeptesh/tourOfHeroes/_git/tourOfHeroes'
+    stage('\u2708 CheckOut'){
+        echo "\033[0;31mRunning ${env.BUILD_ID} on ${env.JENKINS_URL}"
+        git credentialsId: 'deepteshgithub', url: 'https://github.com/deepteshb/tourofheroes.git'
     }
-
-    stage('\u2778 BUILD') {
-        sh 'npm build'
+   
+    stage('\u2708 BUILD') {
+        sh 'npm run build --prod'
         sh 'npm install'
     }
 
-    stage('\u2779 SCA') {
+    stage('\u2708 SCA') {
         def scannerHome = tool 'sonar-scan'
         withSonarQubeEnv('sca') {
             sh "${scannerHome}/bin/sonar-scanner"
         }
     }
 
-    stage('\u277A QUALITY GATE CHECK') {
+    stage('\u2708 QUALITY GATE CHECK') {
         waitForQualityGate abortPipeline: true
     }
 
-     stage('\u277B BUILD FOR PROD') {
-                
-                docker.image ('docker').inside{
-                git 'https://bhattacharjeedeeptesh@dev.azure.com/bhattacharjeedeeptesh/tourOfHeroes/_git/tourOfHeroes'
-                sh 'docker build - < Dockerfile'
-
-         }
-        
-    }
-
+   stage('\u2708 CONTAINERIZE'){
+       def customImage = docker.build("my-image:v.1.0.${env.BUILD_ID}")
+   }
 }
