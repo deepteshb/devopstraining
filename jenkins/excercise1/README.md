@@ -1,4 +1,5 @@
-# EXCERCISE1 - BOOTSTRAPPING
+# EXCERCISE1 - UNDERSTANDING PIPELINE SCHEMATICS
+## How to use Nodes, Agents, Stages and Steps
 ## TASKS
 - Create the following GIT REPO Structure and add roles based access to the team. There is no automation involved in setting it up. Setting up the environment will give you great exposure on handling the core tools involved in DevOps. The following tools need to be setup.
 

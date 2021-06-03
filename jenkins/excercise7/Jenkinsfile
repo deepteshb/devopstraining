@@ -1,0 +1,15 @@
+node ('worker_node1') {
+def responses = null
+stage('selection') {
+responses = input message: 'Enter branch and select build type',
+parameters:[string(defaultValue: '', description: '',
+name: 'BRANCH_NAME'),choice(choices: 'DEBUG\nRELEASE\nTEST',
+description: '', name: 'BUILD_TYPE')]
+}
+stage('process') {
+if ((responses.BRANCH_NAME == 'master') &&
+(responses.BUILD_TYPE == 'RELEASE')) {
+echo "Kicking off production build\n"
+}
+}
+}

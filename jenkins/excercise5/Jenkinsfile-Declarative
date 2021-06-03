@@ -1,0 +1,3 @@
+triggers { pollSCM(*/30 * * * *) }
+input 'Continue to next stage?'
+input id: 'ctns-prompt', message: 'Continue to the next stage?'

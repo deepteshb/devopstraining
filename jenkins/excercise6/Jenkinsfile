@@ -1,0 +1,17 @@
+node {
+    stage('Parallel Demo') {
+        // Run steps in parallel
+        // The map we'll store the steps in
+        def stepsToRun = [:]
+        for (int i = 1; i < 5; i++) {
+            stepsToRun["Step${i }"] = { node {
+                    echo 'start'
+                    sleep 5
+                    echo 'done'
+}}
+        }
+        // Actually run the steps in parallel
+        // parallel takes a map as an argument,
+        parallel stepsToRun
+    }
+}

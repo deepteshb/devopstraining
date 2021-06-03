@@ -1,0 +1,34 @@
+pipeline{
+    agent(){
+        stage('Unit Test') {
+        parallel{
+        stage ('Util unit tests') { 
+            agent { label 'worker_node2' }
+                steps {
+                cleanWs()
+                unstash 'ws-src'
+                gbuild4 ':util:test'
+                }
+            }
+        stage ('API unit tests set 1') {
+            agent { label 'worker_node3'}
+                steps {
+                // always run with a new workspace
+                cleanWs()
+                unstash 'ws-src'
+                gbuild4 '-D test.single=TestExample1* :api:test'
+                }
+            }
+        stage ('API unit tests set 2') {
+            agent { label 'worker_node2' }
+                steps {
+                // always run with a new workspace
+                    cleanWs()
+                    unstash 'ws-src'
+                    gbuild4 '-D test.single=TestExample2* :api:test'
+                    }
+                }
+            }
+        }
+    }
+}

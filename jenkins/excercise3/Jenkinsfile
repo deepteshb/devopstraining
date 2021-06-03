@@ -1,12 +1,18 @@
-node ('master') {
+
+node () {
+    properties([buildDiscarder(logRotator(artifactDaysToKeepStr: '',
+artifactNumToKeepStr: '', daysToKeepStr: '3', numToKeepStr: '5')),
+pipelineTriggers([])])
+
     tool name: 'nodejs', type: 'nodejs'
     tool name: 'sonar-scan', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
     stage ('CHECKOUT') {
-        git credentialsId: 'deepteshgithub', url: 'https://github.com/deepteshb/tourofheroes.git'
+        git credentialsId: 'github', url: 'https://github.com/deepteshb/tourofheroes.git'
     }
     stage('BUILD') {
-        sh 'npm build'
         sh 'npm install'
+        sh 'npm build'
+        
     }
 
     stage('SCA') {

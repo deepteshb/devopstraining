@@ -1,12 +1,37 @@
 pipeline {
   agent {dockerfile true}
+  tools { nodejs 'nodejs' }
+
   stages {
-    stage('Checkout') {
+    stage('\u2708 Checkout') {
                 steps {
                     git credentialsId: 'github', url: 'https://github.com/deepteshb/tourofheroes.git'
                 }
             }
-    stage('Containerize'){
+             stage('\u2708 Build') {
+                steps {
+                sh 'npm run build --prod'
+                }
+            }
+            stage('\u2708 Static Code Analysis') {
+                steps {
+                    withSonarQubeEnv('sca') {
+                        sh 'npm run sonar'
+                    }
+                }
+            }
+
+            stage('\u2708 QualityGateCheck') {
+                steps {
+                    waitForQualityGate abortPipeline: true
+                }
+
+                post {
+                    always {
+                        echo "Build stage complete"
+                     }
+            }
+        stage('\u2708 Containerize'){
         steps{
           echo 'Container Ready'
           }

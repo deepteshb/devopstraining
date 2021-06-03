@@ -1,19 +1,18 @@
-node ('master'){
+node {
     tool name: 'nodejs', type: 'nodejs'
     stage('CHECKOUT'){
         sh 'echo "######################## CHECKOUT STAGE ###################################" '
-        git credentialsId: 'deepteshgithub', url: 'https://github.com/depteshb/tourofheroes.git'
-        /*git 'https://github.com/deepteshb/tourofheroes.git' */
-        /*git branch: 'feature1', credentialsId: 'deepteshgithub', url: 'https://github.com/deepteshb/tourofheroes.git'*/
+        git credentialsId: 'github', url: 'https://github.com/deepteshb/tourofheroes.git'
     }
     stage('BUILD'){
         sh 'echo "######################### BUILD STAGE ##################################" '
-        sh 'npm build'
         sh 'npm install'
+        sh 'npm build'
+        
     }
 
     stage('STATIC CODE ANALYSIS'){
-        sh 'echo "######################### STATIC CODE ANALYSIS ##################################" '
+        sh 'echo "######################### STATIC CODE ANALYSIS FROM CODE ITSELF ##################################" '
         sh 'npm run sonar'
             }
 }

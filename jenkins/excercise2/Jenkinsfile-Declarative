@@ -5,12 +5,13 @@ pipeline {
     stages {
             stage('Checkout'){
                 steps{
-                    git credentialsId: 'deepteshgithub', url: 'https://github.com/deepteshb/tourofheroes.git'
+                    git credentialsId: 'github', url: 'https://github.com/deepteshb/tourofheroes.git'
                     }
             }
             stage('Build'){
                 steps{
                    sh 'npm install'
+                   sh 'npm build -dev'
                 }
             }
             stage('Static Code Analysis'){

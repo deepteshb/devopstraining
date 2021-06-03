@@ -21,7 +21,6 @@
 
 GITHUB : https://github.com/deepteshb/tourofheroes.git
 
-
 ## TASKS
 - On a pull request to dev environment
     - trigger a job for BUILD, SCA, TEST, QUALITYGATECHECK

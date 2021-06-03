@@ -5,10 +5,10 @@ node {
     tool name: 'sonar-scan', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
     stage('\u2708 CheckOut'){
         echo "\033[0;31mRunning ${env.BUILD_ID} on ${env.JENKINS_URL}"
-        git credentialsId: 'deepteshgithub', url: 'https://github.com/deepteshb/tourofheroes.git'
+        git credentialsId: 'github', url: 'https://github.com/deepteshb/tourofheroes.git'
     }
    
-    stage('\u2708 BUILD') {
+    stage('\u2708 COMPILE') {
         sh 'npm run build --prod'
         sh 'npm install'
     }
@@ -25,6 +25,10 @@ node {
     }
 
    stage('\u2708 CONTAINERIZE'){
-       def customImage = docker.build("my-image:v.1.0.${env.BUILD_ID}")
-   }
+       docker.withRegistry('', 'dockerhub'){
+       def customImage = docker.build("deepteshb/tourofheroes:v.1.0.${env.BUILD_ID}")
+       customImage.push()
+        slackSend message: "Build completed for ${env.JOB_NAME}. Code has been pushed into DockerHub repository."
+            }
+    }
 }
