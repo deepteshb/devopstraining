@@ -1,0 +1,13 @@
+node{
+    stage('Checkout'){
+        
+            cleanWs()
+             sh 'echo "run this step"'
+             sh 'lls'
+       
+    }
+    stage('Build'){
+        sh 'echo "executing next stage"'
+         
+    }
+}

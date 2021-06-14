@@ -1,8 +1,7 @@
-
 node () {
     properties([buildDiscarder(logRotator(artifactDaysToKeepStr: '',
-artifactNumToKeepStr: '', daysToKeepStr: '3', numToKeepStr: '5')),
-pipelineTriggers([])])
+    artifactNumToKeepStr: '', daysToKeepStr: '3', numToKeepStr: '5')),
+    pipelineTriggers([])])
 
     tool name: 'nodejs', type: 'nodejs'
     tool name: 'sonar-scan', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
@@ -25,6 +24,4 @@ pipelineTriggers([])])
     stage('QUALITY GATE CHECK') {
         waitForQualityGate abortPipeline: true
     }
-
-
 }

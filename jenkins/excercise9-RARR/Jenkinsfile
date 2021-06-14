@@ -1,0 +1,232 @@
+node {
+
+    stage('Checkout'){
+
+    try {
+        sh 'echo "STAGE CHECKOUT"'
+        cleanWs()
+        def buildNumber = env.BUILD_NUMBER
+        def workspace = env.WORKSPACE
+        def buildUrl = env.BUILD_URL
+        git credentialsId: 'jenkinsci_gitlab_user', url: 'http://164.52.214.159/rishabh/betterbuddys.git'
+        echo "workspace directory is ${workspace}"
+        }
+        catch (err1) {
+            
+            echo 'ERROR1: CHECKOUT STAGE FAILURE. RING THE BELL'
+            throw err1
+        }
+    }
+
+    stage('Build'){
+
+    try {
+        withMaven(maven: 'maven3_8', traceability: false) {
+                    sh 'echo "STAGE BUILD"'
+                    sh ' mvn clean install'
+                    sh ' mvn test '
+                }
+
+        }
+        catch (err2) {
+            echo 'ERROR2: BUILD STAGE FAILURE. RING THE BELL'
+            throw err2
+        }
+    }
+
+    stage('Stop Tomcat'){
+    try{ 
+            
+    sshPublisher(publishers: [sshPublisherDesc(configName: 'ec2', sshCredentials: [encryptedPassphrase: '{AQAAABAAAAAQEaTPLl9qQsPM3aUcx8oock+mspCNeZZ0XlG5d/u+aQc=}', key: '''-----BEGIN RSA PRIVATE KEY-----
+MIIEogIBAAKCAQEAouKmsjJFGpg4a6PD9uZ9xUsJsDM7wQ4LQ/PXeOVbTHN4NLwh
+whMDhneWbvYg+IJ7ck/BKTZ4+z43E+33o3cE5T8kuty20qr61YG9SCjzq/NggW9L
+00p7WtlX6MOXTPOAgFxxsKaU1rm8uDnfuzol1E1GX/8Rf2ZL7Zn6Y0DmXoPRuOvb
+hAKnwxgsWpS139X3tQyGhJSd3l+qqQtfmgcbHAtm6MCtUnMqyT6l9aHBQ5vwb9uY
+6cfPIkrDw3RtaKCV3gEMgpevbC5Z+MOZvN1aS4Vp9soC31NgI2gAKXNt5O6MBNN0
+Z2XPF3ZG8AwTU8lVIbpL/OxQReC/T0Z+6dvigQIDAQABAoIBADX3I8VsNErwXdkD
+w/w8NzUzfD09bDG1BnR4CE6Mpqf4pb3LCuAyznsxicyvjRLooB+qXtPZsVGENllL
+AT3OQ/fz6KZkU8oOTdaJCn4q2ziABNw9VIDnb2EVGzQKAUnEbzGX7y7Ysf1GQklD
+G2X7iOcCxyss5c4wxT0uQ6+4o9pyCImRmgQJGsP3ZGVAKmzJ/Z48GqbrmfmLuASf
+1jn3/TynoLqw8HtGdN+7kKrX62VF9cPs3WQbhr0PS5vtCPq3xDXaIhrwuBcn7c0N
+CwiPSY3hD2ok29YGphCuS3GVjOTZOP3JzuxdpHTrfukFo9ojfTWO1VFKmA6yYPpL
+OHSGV8ECgYEA1bUFXdLPKZVCu5pgTJtDeW00oicT6Uh4Ih4nCxE+UV9K4o7XMkRs
+W+DEgvT1f9Gyn6/nFAXpiunH7TQQ7VZPQGFg23g3zVstrof8w9zqBBv3l8eDdpp2
+BidNjo1l7fDKRvZCFzhSBEgFSU0Frg4HqB1kBMs3iXopgqJZijJYxdkCgYEAwx7c
+4wt3HKNbOCB3AYPPUGD7tkDrnrOGYzLzY1VRU90F9+cmgSveRZj4hcyo1WvPygxo
+MFHM/uZAKyntOO6864t6MT12o0L7HfVuBOMMLV3AnxVqoEc9lPGL/lOjN7LkvAIA
+elzOAh+IVloMkzuyDL2khOcHO58DmxVQPnGcUOkCgYAq1NgZgNnSXL7+OKeaUvgI
+CzIkWa6s78BcHiz3E+Kojm/Ezpok0f/hvj/Ee3IExzOEu82VfsXa+JYAXZIS71x8
+68ds1UBh4SdbtpebbdhdMHnEKtGXYMfM3e22Z3KJaNwxssN2Qex2PTUKBuzfgKJa
+OGHGcDBWVmyhaQaHIyYVqQKBgC8lFuP5EjemNNUz6u0/xui59jfMKeI3qGHxnqNC
+qxrjTZzfigst6U/RrULO94BRw2wjYU1Dho+UXK7RO5NFA/q5wbWCD1dVSM2tTn75
+yShw/aiyiQffDr8dOeEink5H+EKBDVKDd/dFXTDYIy+z/cpcTBMcqz+5pSpklPXx
+h355AoGACfP8JvVcTV92Zhz+41asrCeLb7kPk8XuQxTysLIpyJ3Es4DxhClenwLc
+0TWPM+Z5NRM/BZRWEiZVGDTQD/iZ4wsc5XfR2OclNP6fUaVOuQd0jwtTcmYp8k5r
+NXJcHi1tw0XJJZqD5y9pqG4/syMiRB8nGqJMYfAQvfpvJCuRXCU=
+-----END RSA PRIVATE KEY-----''', keyPath: '', username: 'ec2-user'], sshLabel: [label: 'ec2'], transfers: [sshTransfer(cleanRemote: false, excludes: '', execCommand: 'sudo service tomcat8 stop', execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+', remoteDirectory:'', remoteDirectorySDF: false, removePrefix: '', sourceFiles: '')], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: true)])
+
+        }
+        catch(err3){
+            echo 'ERROR3: TOMCAT STOP FAILED'
+            throw err3
+        }   
+
+    }
+
+    stage('Backup'){
+    try{ 
+            
+    sshPublisher(publishers: [sshPublisherDesc(configName: 'ec2', sshCredentials: [encryptedPassphrase: '{AQAAABAAAAAQEaTPLl9qQsPM3aUcx8oock+mspCNeZZ0XlG5d/u+aQc=}', key: '''-----BEGIN RSA PRIVATE KEY-----
+MIIEogIBAAKCAQEAouKmsjJFGpg4a6PD9uZ9xUsJsDM7wQ4LQ/PXeOVbTHN4NLwh
+whMDhneWbvYg+IJ7ck/BKTZ4+z43E+33o3cE5T8kuty20qr61YG9SCjzq/NggW9L
+00p7WtlX6MOXTPOAgFxxsKaU1rm8uDnfuzol1E1GX/8Rf2ZL7Zn6Y0DmXoPRuOvb
+hAKnwxgsWpS139X3tQyGhJSd3l+qqQtfmgcbHAtm6MCtUnMqyT6l9aHBQ5vwb9uY
+6cfPIkrDw3RtaKCV3gEMgpevbC5Z+MOZvN1aS4Vp9soC31NgI2gAKXNt5O6MBNN0
+Z2XPF3ZG8AwTU8lVIbpL/OxQReC/T0Z+6dvigQIDAQABAoIBADX3I8VsNErwXdkD
+w/w8NzUzfD09bDG1BnR4CE6Mpqf4pb3LCuAyznsxicyvjRLooB+qXtPZsVGENllL
+AT3OQ/fz6KZkU8oOTdaJCn4q2ziABNw9VIDnb2EVGzQKAUnEbzGX7y7Ysf1GQklD
+G2X7iOcCxyss5c4wxT0uQ6+4o9pyCImRmgQJGsP3ZGVAKmzJ/Z48GqbrmfmLuASf
+1jn3/TynoLqw8HtGdN+7kKrX62VF9cPs3WQbhr0PS5vtCPq3xDXaIhrwuBcn7c0N
+CwiPSY3hD2ok29YGphCuS3GVjOTZOP3JzuxdpHTrfukFo9ojfTWO1VFKmA6yYPpL
+OHSGV8ECgYEA1bUFXdLPKZVCu5pgTJtDeW00oicT6Uh4Ih4nCxE+UV9K4o7XMkRs
+W+DEgvT1f9Gyn6/nFAXpiunH7TQQ7VZPQGFg23g3zVstrof8w9zqBBv3l8eDdpp2
+BidNjo1l7fDKRvZCFzhSBEgFSU0Frg4HqB1kBMs3iXopgqJZijJYxdkCgYEAwx7c
+4wt3HKNbOCB3AYPPUGD7tkDrnrOGYzLzY1VRU90F9+cmgSveRZj4hcyo1WvPygxo
+MFHM/uZAKyntOO6864t6MT12o0L7HfVuBOMMLV3AnxVqoEc9lPGL/lOjN7LkvAIA
+elzOAh+IVloMkzuyDL2khOcHO58DmxVQPnGcUOkCgYAq1NgZgNnSXL7+OKeaUvgI
+CzIkWa6s78BcHiz3E+Kojm/Ezpok0f/hvj/Ee3IExzOEu82VfsXa+JYAXZIS71x8
+68ds1UBh4SdbtpebbdhdMHnEKtGXYMfM3e22Z3KJaNwxssN2Qex2PTUKBuzfgKJa
+OGHGcDBWVmyhaQaHIyYVqQKBgC8lFuP5EjemNNUz6u0/xui59jfMKeI3qGHxnqNC
+qxrjTZzfigst6U/RrULO94BRw2wjYU1Dho+UXK7RO5NFA/q5wbWCD1dVSM2tTn75
+yShw/aiyiQffDr8dOeEink5H+EKBDVKDd/dFXTDYIy+z/cpcTBMcqz+5pSpklPXx
+h355AoGACfP8JvVcTV92Zhz+41asrCeLb7kPk8XuQxTysLIpyJ3Es4DxhClenwLc
+0TWPM+Z5NRM/BZRWEiZVGDTQD/iZ4wsc5XfR2OclNP6fUaVOuQd0jwtTcmYp8k5r
+NXJcHi1tw0XJJZqD5y9pqG4/syMiRB8nGqJMYfAQvfpvJCuRXCU=
+-----END RSA PRIVATE KEY-----''', keyPath: '', username: 'ec2-user'], sshLabel: [label: 'ec2'], transfers: [sshTransfer(cleanRemote: false, excludes: '', execCommand: 'sudo zip -r backup.zip /var/lib/tomcat8/webapps', execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+', remoteDirectory:'', remoteDirectorySDF: false, removePrefix: '', sourceFiles: '')], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: true)])
+
+        }
+        catch(err4){
+            echo 'ERROR4: BACKUP FAILED'
+            throw err4
+        }   
+
+    }
+
+    stage('Deploy to Staging'){
+    try{ 
+            
+    sshPublisher(publishers: [sshPublisherDesc(configName: 'ec2', sshCredentials: [encryptedPassphrase: '{AQAAABAAAAAQEaTPLl9qQsPM3aUcx8oock+mspCNeZZ0XlG5d/u+aQc=}', key: '''-----BEGIN RSA PRIVATE KEY-----
+MIIEogIBAAKCAQEAouKmsjJFGpg4a6PD9uZ9xUsJsDM7wQ4LQ/PXeOVbTHN4NLwh
+whMDhneWbvYg+IJ7ck/BKTZ4+z43E+33o3cE5T8kuty20qr61YG9SCjzq/NggW9L
+00p7WtlX6MOXTPOAgFxxsKaU1rm8uDnfuzol1E1GX/8Rf2ZL7Zn6Y0DmXoPRuOvb
+hAKnwxgsWpS139X3tQyGhJSd3l+qqQtfmgcbHAtm6MCtUnMqyT6l9aHBQ5vwb9uY
+6cfPIkrDw3RtaKCV3gEMgpevbC5Z+MOZvN1aS4Vp9soC31NgI2gAKXNt5O6MBNN0
+Z2XPF3ZG8AwTU8lVIbpL/OxQReC/T0Z+6dvigQIDAQABAoIBADX3I8VsNErwXdkD
+w/w8NzUzfD09bDG1BnR4CE6Mpqf4pb3LCuAyznsxicyvjRLooB+qXtPZsVGENllL
+AT3OQ/fz6KZkU8oOTdaJCn4q2ziABNw9VIDnb2EVGzQKAUnEbzGX7y7Ysf1GQklD
+G2X7iOcCxyss5c4wxT0uQ6+4o9pyCImRmgQJGsP3ZGVAKmzJ/Z48GqbrmfmLuASf
+1jn3/TynoLqw8HtGdN+7kKrX62VF9cPs3WQbhr0PS5vtCPq3xDXaIhrwuBcn7c0N
+CwiPSY3hD2ok29YGphCuS3GVjOTZOP3JzuxdpHTrfukFo9ojfTWO1VFKmA6yYPpL
+OHSGV8ECgYEA1bUFXdLPKZVCu5pgTJtDeW00oicT6Uh4Ih4nCxE+UV9K4o7XMkRs
+W+DEgvT1f9Gyn6/nFAXpiunH7TQQ7VZPQGFg23g3zVstrof8w9zqBBv3l8eDdpp2
+BidNjo1l7fDKRvZCFzhSBEgFSU0Frg4HqB1kBMs3iXopgqJZijJYxdkCgYEAwx7c
+4wt3HKNbOCB3AYPPUGD7tkDrnrOGYzLzY1VRU90F9+cmgSveRZj4hcyo1WvPygxo
+MFHM/uZAKyntOO6864t6MT12o0L7HfVuBOMMLV3AnxVqoEc9lPGL/lOjN7LkvAIA
+elzOAh+IVloMkzuyDL2khOcHO58DmxVQPnGcUOkCgYAq1NgZgNnSXL7+OKeaUvgI
+CzIkWa6s78BcHiz3E+Kojm/Ezpok0f/hvj/Ee3IExzOEu82VfsXa+JYAXZIS71x8
+68ds1UBh4SdbtpebbdhdMHnEKtGXYMfM3e22Z3KJaNwxssN2Qex2PTUKBuzfgKJa
+OGHGcDBWVmyhaQaHIyYVqQKBgC8lFuP5EjemNNUz6u0/xui59jfMKeI3qGHxnqNC
+qxrjTZzfigst6U/RrULO94BRw2wjYU1Dho+UXK7RO5NFA/q5wbWCD1dVSM2tTn75
+yShw/aiyiQffDr8dOeEink5H+EKBDVKDd/dFXTDYIy+z/cpcTBMcqz+5pSpklPXx
+h355AoGACfP8JvVcTV92Zhz+41asrCeLb7kPk8XuQxTysLIpyJ3Es4DxhClenwLc
+0TWPM+Z5NRM/BZRWEiZVGDTQD/iZ4wsc5XfR2OclNP6fUaVOuQd0jwtTcmYp8k5r
+NXJcHi1tw0XJJZqD5y9pqG4/syMiRB8nGqJMYfAQvfpvJCuRXCU=
+-----END RSA PRIVATE KEY-----''', keyPath: '', username: 'ec2-user'], sshLabel: [label: 'ec2'], transfers: [sshTransfer(cleanRemote: false, excludes: '', execCommand: 'ls -lrth /home/ec2-user/staging/', execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+', remoteDirectory:'', remoteDirectorySDF: false, removePrefix: '', sourceFiles: '**/*/*.war')], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: true)])
+
+        }
+        catch(err5){
+            echo 'ERROR5: APPLICATION DEPLOYMENT FAILED TO STAGING'
+            throw err5
+        }   
+
+    }
+
+     stage('MOVE TO TOMCAT'){
+    try{ 
+            
+    sshPublisher(publishers: [sshPublisherDesc(configName: 'ec2', sshCredentials: [encryptedPassphrase: '{AQAAABAAAAAQEaTPLl9qQsPM3aUcx8oock+mspCNeZZ0XlG5d/u+aQc=}', key: '''-----BEGIN RSA PRIVATE KEY-----
+MIIEogIBAAKCAQEAouKmsjJFGpg4a6PD9uZ9xUsJsDM7wQ4LQ/PXeOVbTHN4NLwh
+whMDhneWbvYg+IJ7ck/BKTZ4+z43E+33o3cE5T8kuty20qr61YG9SCjzq/NggW9L
+00p7WtlX6MOXTPOAgFxxsKaU1rm8uDnfuzol1E1GX/8Rf2ZL7Zn6Y0DmXoPRuOvb
+hAKnwxgsWpS139X3tQyGhJSd3l+qqQtfmgcbHAtm6MCtUnMqyT6l9aHBQ5vwb9uY
+6cfPIkrDw3RtaKCV3gEMgpevbC5Z+MOZvN1aS4Vp9soC31NgI2gAKXNt5O6MBNN0
+Z2XPF3ZG8AwTU8lVIbpL/OxQReC/T0Z+6dvigQIDAQABAoIBADX3I8VsNErwXdkD
+w/w8NzUzfD09bDG1BnR4CE6Mpqf4pb3LCuAyznsxicyvjRLooB+qXtPZsVGENllL
+AT3OQ/fz6KZkU8oOTdaJCn4q2ziABNw9VIDnb2EVGzQKAUnEbzGX7y7Ysf1GQklD
+G2X7iOcCxyss5c4wxT0uQ6+4o9pyCImRmgQJGsP3ZGVAKmzJ/Z48GqbrmfmLuASf
+1jn3/TynoLqw8HtGdN+7kKrX62VF9cPs3WQbhr0PS5vtCPq3xDXaIhrwuBcn7c0N
+CwiPSY3hD2ok29YGphCuS3GVjOTZOP3JzuxdpHTrfukFo9ojfTWO1VFKmA6yYPpL
+OHSGV8ECgYEA1bUFXdLPKZVCu5pgTJtDeW00oicT6Uh4Ih4nCxE+UV9K4o7XMkRs
+W+DEgvT1f9Gyn6/nFAXpiunH7TQQ7VZPQGFg23g3zVstrof8w9zqBBv3l8eDdpp2
+BidNjo1l7fDKRvZCFzhSBEgFSU0Frg4HqB1kBMs3iXopgqJZijJYxdkCgYEAwx7c
+4wt3HKNbOCB3AYPPUGD7tkDrnrOGYzLzY1VRU90F9+cmgSveRZj4hcyo1WvPygxo
+MFHM/uZAKyntOO6864t6MT12o0L7HfVuBOMMLV3AnxVqoEc9lPGL/lOjN7LkvAIA
+elzOAh+IVloMkzuyDL2khOcHO58DmxVQPnGcUOkCgYAq1NgZgNnSXL7+OKeaUvgI
+CzIkWa6s78BcHiz3E+Kojm/Ezpok0f/hvj/Ee3IExzOEu82VfsXa+JYAXZIS71x8
+68ds1UBh4SdbtpebbdhdMHnEKtGXYMfM3e22Z3KJaNwxssN2Qex2PTUKBuzfgKJa
+OGHGcDBWVmyhaQaHIyYVqQKBgC8lFuP5EjemNNUz6u0/xui59jfMKeI3qGHxnqNC
+qxrjTZzfigst6U/RrULO94BRw2wjYU1Dho+UXK7RO5NFA/q5wbWCD1dVSM2tTn75
+yShw/aiyiQffDr8dOeEink5H+EKBDVKDd/dFXTDYIy+z/cpcTBMcqz+5pSpklPXx
+h355AoGACfP8JvVcTV92Zhz+41asrCeLb7kPk8XuQxTysLIpyJ3Es4DxhClenwLc
+0TWPM+Z5NRM/BZRWEiZVGDTQD/iZ4wsc5XfR2OclNP6fUaVOuQd0jwtTcmYp8k5r
+NXJcHi1tw0XJJZqD5y9pqG4/syMiRB8nGqJMYfAQvfpvJCuRXCU=
+-----END RSA PRIVATE KEY-----''', keyPath: '', username: 'ec2-user'], sshLabel: [label: 'ec2'], transfers: [sshTransfer(cleanRemote: false, excludes: '', execCommand: 'sudo cp /home/ec2-user/staging/target/*.war /var/lib/tomcat8/webapps/', execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+', remoteDirectory:'', remoteDirectorySDF: false, removePrefix: '', sourceFiles: '')], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: true)])
+
+        }
+        catch(err6){
+            echo 'ERROR6: COPY FAILED'
+            throw err6
+        }   
+
+    }
+
+    stage('Tomcat Restart'){
+    try{ 
+            
+    sshPublisher(publishers: [sshPublisherDesc(configName: 'ec2', sshCredentials: [encryptedPassphrase: '{AQAAABAAAAAQEaTPLl9qQsPM3aUcx8oock+mspCNeZZ0XlG5d/u+aQc=}', key: '''-----BEGIN RSA PRIVATE KEY-----
+MIIEogIBAAKCAQEAouKmsjJFGpg4a6PD9uZ9xUsJsDM7wQ4LQ/PXeOVbTHN4NLwh
+whMDhneWbvYg+IJ7ck/BKTZ4+z43E+33o3cE5T8kuty20qr61YG9SCjzq/NggW9L
+00p7WtlX6MOXTPOAgFxxsKaU1rm8uDnfuzol1E1GX/8Rf2ZL7Zn6Y0DmXoPRuOvb
+hAKnwxgsWpS139X3tQyGhJSd3l+qqQtfmgcbHAtm6MCtUnMqyT6l9aHBQ5vwb9uY
+6cfPIkrDw3RtaKCV3gEMgpevbC5Z+MOZvN1aS4Vp9soC31NgI2gAKXNt5O6MBNN0
+Z2XPF3ZG8AwTU8lVIbpL/OxQReC/T0Z+6dvigQIDAQABAoIBADX3I8VsNErwXdkD
+w/w8NzUzfD09bDG1BnR4CE6Mpqf4pb3LCuAyznsxicyvjRLooB+qXtPZsVGENllL
+AT3OQ/fz6KZkU8oOTdaJCn4q2ziABNw9VIDnb2EVGzQKAUnEbzGX7y7Ysf1GQklD
+G2X7iOcCxyss5c4wxT0uQ6+4o9pyCImRmgQJGsP3ZGVAKmzJ/Z48GqbrmfmLuASf
+1jn3/TynoLqw8HtGdN+7kKrX62VF9cPs3WQbhr0PS5vtCPq3xDXaIhrwuBcn7c0N
+CwiPSY3hD2ok29YGphCuS3GVjOTZOP3JzuxdpHTrfukFo9ojfTWO1VFKmA6yYPpL
+OHSGV8ECgYEA1bUFXdLPKZVCu5pgTJtDeW00oicT6Uh4Ih4nCxE+UV9K4o7XMkRs
+W+DEgvT1f9Gyn6/nFAXpiunH7TQQ7VZPQGFg23g3zVstrof8w9zqBBv3l8eDdpp2
+BidNjo1l7fDKRvZCFzhSBEgFSU0Frg4HqB1kBMs3iXopgqJZijJYxdkCgYEAwx7c
+4wt3HKNbOCB3AYPPUGD7tkDrnrOGYzLzY1VRU90F9+cmgSveRZj4hcyo1WvPygxo
+MFHM/uZAKyntOO6864t6MT12o0L7HfVuBOMMLV3AnxVqoEc9lPGL/lOjN7LkvAIA
+elzOAh+IVloMkzuyDL2khOcHO58DmxVQPnGcUOkCgYAq1NgZgNnSXL7+OKeaUvgI
+CzIkWa6s78BcHiz3E+Kojm/Ezpok0f/hvj/Ee3IExzOEu82VfsXa+JYAXZIS71x8
+68ds1UBh4SdbtpebbdhdMHnEKtGXYMfM3e22Z3KJaNwxssN2Qex2PTUKBuzfgKJa
+OGHGcDBWVmyhaQaHIyYVqQKBgC8lFuP5EjemNNUz6u0/xui59jfMKeI3qGHxnqNC
+qxrjTZzfigst6U/RrULO94BRw2wjYU1Dho+UXK7RO5NFA/q5wbWCD1dVSM2tTn75
+yShw/aiyiQffDr8dOeEink5H+EKBDVKDd/dFXTDYIy+z/cpcTBMcqz+5pSpklPXx
+h355AoGACfP8JvVcTV92Zhz+41asrCeLb7kPk8XuQxTysLIpyJ3Es4DxhClenwLc
+0TWPM+Z5NRM/BZRWEiZVGDTQD/iZ4wsc5XfR2OclNP6fUaVOuQd0jwtTcmYp8k5r
+NXJcHi1tw0XJJZqD5y9pqG4/syMiRB8nGqJMYfAQvfpvJCuRXCU=
+-----END RSA PRIVATE KEY-----''', keyPath: '', username: 'ec2-user'], sshLabel: [label: 'ec2'], transfers: [sshTransfer(cleanRemote: false, excludes: '', execCommand: 'sudo service tomcat8 restart', execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+', remoteDirectory:'', remoteDirectorySDF: false, removePrefix: '', sourceFiles: '')], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: true)])
+
+        }
+        catch(err7){
+            echo 'ERROR7: Restart Failed'
+            throw err7
+        }   
+
+    }
+}
+    

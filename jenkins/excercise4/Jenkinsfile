@@ -25,10 +25,10 @@ node {
     }
 
    stage('\u2708 CONTAINERIZE'){
-       docker.withRegistry('', 'dockerhub'){
-       def customImage = docker.build("deepteshb/tourofheroes:v.1.0.${env.BUILD_ID}")
-       customImage.push()
-        slackSend message: "Build completed for ${env.JOB_NAME}. Code has been pushed into DockerHub repository."
-            }
+        docker.withRegistry('', 'dockerhub'){
+        def customImage = docker.build("deepteshb/tourofheroes:v.1.0.${env.BUILD_ID}")
+        customImage.push()
+        #     
+        slackSend color: "green" message: "Build completed for ${env.JOB_NAME}. Code has been pushed into DockerHub repository."
     }
 }

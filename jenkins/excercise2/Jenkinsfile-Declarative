@@ -5,8 +5,9 @@ pipeline {
     stages {
             stage('Checkout'){
                 steps{
-                    git credentialsId: 'github', url: 'https://github.com/deepteshb/tourofheroes.git'
-                    }
+                    script{
+                        git credentialsId: 'github', url: 'https://github.com/deepteshb/tourofheroes.git'                     }
+                }
             }
             stage('Build'){
                 steps{

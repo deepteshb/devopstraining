@@ -1,0 +1,16 @@
+node{
+    stage('Checkout'){
+        try{
+            
+            sh 'lll'
+        }
+        catch(err){
+
+        }
+       
+    }
+    stage('Build'){
+        sh "ls"
+        
+    }
+}
