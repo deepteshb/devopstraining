@@ -8,6 +8,13 @@
 - Basics of Different Architecture
 - Different Technologies and How they work
 - Agile Models and Software Development Life Cycles
+- Jenkins Architecture
+    - Master and Slave
+    - ElasticSearch
+    - H2 Database
+    - MySql Database
+    - PostgresDB
+    - MongoDB
 
 ## Pre-Requisites
 - Knowledge of Git
