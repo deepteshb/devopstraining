@@ -1,0 +1,19 @@
+# DAY2 : Starting with Jenkins Configuration
+- How to install Jenkins
+    - On Linux (DEB & RHEL)
+    - On Windows
+- How to Configure Plugins
+    - Important Plugins are:
+        - Pipeline
+        - Pipeline Steps
+        - Blue Ocean Core
+        - Delivery Pipeline
+        - Configuration as Code
+        - HTML Publisher
+        - Sonarqube Scanner
+        - AWS Crendentials
+        - Cloudbees Docker
+        - Docker
+        - AWS EC2
+        - SSH Publisher
+        - Credentials

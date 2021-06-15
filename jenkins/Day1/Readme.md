@@ -17,5 +17,5 @@
 ## Level
 Beginners
 
-# List of Excercises
+# List of Excercises to follow.
 
